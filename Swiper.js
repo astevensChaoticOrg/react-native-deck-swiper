@@ -172,14 +172,19 @@ class Swiper extends Component {
     }
 
     if (isSwipingRight) {
+      this.props.onSwipingRight();
       this.setState({ labelType: LABEL_TYPES.RIGHT })
     } else if (isSwipingLeft) {
+      this.props.onSwipingLeft();
       this.setState({ labelType: LABEL_TYPES.LEFT })
     } else if (isSwipingTop) {
+      this.props.onSwipingTop();
       this.setState({ labelType: LABEL_TYPES.TOP })
     } else if (isSwipingBottom) {
+      this.props.onSwipingBottom();
       this.setState({ labelType: LABEL_TYPES.BOTTOM })
     } else {
+      this.props.onSwipingNone();
       this.setState({ labelType: LABEL_TYPES.NONE })
     }
 
@@ -332,10 +337,24 @@ class Swiper extends Component {
   }
 
   getSwipeDirection = (animatedValueX, animatedValueY) => {
-    const isSwipingLeft = animatedValueX < -this.props.horizontalThreshold
-    const isSwipingRight = animatedValueX > this.props.horizontalThreshold
-    const isSwipingTop = animatedValueY < -this.props.verticalThreshold
-    const isSwipingBottom = animatedValueY > this.props.verticalThreshold
+//    const isSwipingLeft = animatedValueX < -this.props.horizontalThreshold
+//    const isSwipingRight = animatedValueX > this.props.horizontalThreshold
+//    const isSwipingTop = animatedValueY < -this.props.verticalThreshold
+//    const isSwipingBottom = animatedValueY > this.props.verticalThreshold
+
+
+    let isSwipingLeft = false;
+    let isSwipingRight = false;
+    let isSwipingTop = false;
+    let isSwipingBottom = false;
+    if (Math.abs(animatedValueX) > Math.abs(animatedValueY) && Math.abs(animatedValueX) > this.props.horizontalThreshold) {
+      if (animatedValueX > 0) isSwipingRight = true
+      else isSwipingLeft = true
+    } else if (Math.abs(animatedValueY) > Math.abs(animatedValueX) && Math.abs(animatedValueY) > this.props.verticalThreshold) {
+      if (animatedValueY > 0) isSwipingBottom = true
+      else isSwipingTop = true
+    }
+
 
     return { isSwipingLeft, isSwipingRight, isSwipingTop, isSwipingBottom }
   }
@@ -884,6 +903,11 @@ Swiper.propTypes = {
   onSwipedRight: PropTypes.func,
   onSwipedTop: PropTypes.func,
   onSwiping: PropTypes.func,
+  onSwipingLeft: PropTypes.func,
+  onSwipingRight: PropTypes.func,
+  onSwipingTop: PropTypes.func,
+  onSwipingBottom: PropTypes.func,
+  onSwipingNone: PropTypes.func,
   onTapCard: PropTypes.func,
   onTapCardDeadZone: PropTypes.number,
   outputCardOpacityRangeX: PropTypes.array,
@@ -968,6 +992,11 @@ Swiper.defaultProps = {
   onSwipedRight: cardIndex => { },
   onSwipedTop: cardIndex => { },
   onSwiping: () => { },
+  onSwipingLeft: () => { },
+  onSwipingRight: () => { },
+  onSwipingTop: () => { },
+  onSwipingBottom: () => { },
+  onSwipingNone: () => { },
   onTapCard: (cardIndex) => { },
   onTapCardDeadZone: 5,
   outputCardOpacityRangeX: [0.8, 1, 1, 1, 0.8],
